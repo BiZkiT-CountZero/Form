@@ -1,0 +1,38 @@
+package com.gmail.bizkit245;
+
+import java.io.IOException;
+import javax.servlet.http.*;
+
+public class LoginServlet extends javax.servlet.http.HttpServlet {
+    static final String LOGIN = "admin";
+    static final String PASS = "admin";
+    static final String LOGIN1 = "admin1";
+    static final String PASS1 = "admin1";
+    static final String LOGIN2 = "admin2";
+    static final String PASS2 = "admin2";
+    static final String LOGIN3 = "admin3";
+    static final String PASS3 = "admin3";
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        if (LOGIN.equals(login) && PASS.equals(password) || LOGIN1.equals(login) && PASS1.equals(password) || LOGIN2.equals(login) && PASS2.equals(password)
+        || LOGIN3.equals(login) && PASS3.equals(password)){
+            HttpSession session = request.getSession(true);
+            session.setAttribute("user_login", login);
+        }
+
+        response.sendRedirect("index.jsp");
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        String a = request.getParameter("a");
+        HttpSession session = request.getSession(false);
+
+        if ("exit".equals(a) && (session != null))
+            session.removeAttribute("user_login");
+
+        response.sendRedirect("index.jsp");
+    }
+}
