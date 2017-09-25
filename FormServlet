@@ -1,0 +1,69 @@
+package com.gmail.bizkit245;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@WebServlet(urlPatterns = "/stat")
+public class FormServlet extends HttpServlet {
+    private AtomicInteger visits = new AtomicInteger(0);
+    private AtomicInteger male = new AtomicInteger(0);
+    private AtomicInteger female = new AtomicInteger(0);
+    private AtomicInteger ageLess20 = new AtomicInteger(0);
+    private AtomicInteger ageOver20 = new AtomicInteger(0);
+    private AtomicInteger ageOver30 = new AtomicInteger(0);
+    private AtomicInteger ageOver40 = new AtomicInteger(0);
+    private AtomicInteger ageOver50 = new AtomicInteger(0);
+    private AtomicInteger single = new AtomicInteger(0);
+    private AtomicInteger married = new AtomicInteger(0);
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String sex = request.getParameter("sex");
+        String age = request.getParameter("age");
+        String status = request.getParameter("status");
+
+        getStat(sex, age, status);
+
+        response.setContentType("text/html");
+
+        String commonResult = "<br><h4>Common Statistics:</h4><br>Sex: <br>Men: " + male + " <br>Women: " + female +
+                "<br><br>Age: <br> less 20: " + ageLess20 + "<br> over 20: " + ageOver20 + "<br> over 30: " +
+                ageOver30 + "<br> over 40: " + ageOver40 + "<br> over 50: " + ageOver50 + "<br><br> Family status <br>  single: " +
+                single + "<br> married: " + married;
+
+        String myResult = "<!DOCTYPE html><html><head><title>Statistic</title></head>" +
+                "<body><h4>Total answers' amount: </h4>" + visits +
+                "<br><h4>Your personal statistics:</h4><br>" +
+                "Your sex: " + sex + "<br>Your age: " + age + "<br>Your family status: " + status + commonResult +
+                "<br><button><a href='/login?a=exit'>Try again</a></button></body></html>";
+
+        PrintWriter result = response.getWriter();
+        result.println(myResult);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    private void getStat(String sex, String age, String status) {
+        if (sex.equals("male")) male.incrementAndGet();
+        if (sex.equals("female")) female.incrementAndGet();
+        if (age.equals("less 20")) ageLess20.incrementAndGet();
+        if (age.equals("over 20")) ageOver20.incrementAndGet();
+        if (age.equals("over 30")) ageOver30.incrementAndGet();
+        if (age.equals("over 40")) ageOver40.incrementAndGet();
+        if (age.equals("over 50")) ageOver50.incrementAndGet();
+        if (status.equals("single")) single.incrementAndGet();
+        if (status.equals("married")) married.incrementAndGet();
+        visits.incrementAndGet();
+    }
+
+}
